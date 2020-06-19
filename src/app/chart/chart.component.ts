@@ -7,8 +7,6 @@ export class Data {
 }
 
 
-
-
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -31,7 +29,11 @@ export class ChartComponent implements OnChanges {
 
   constructor() { }
 
-  ngOnChanges() { }
+  ngOnChanges() {
+    if (this.data) {
+      this.buildChart();
+    }
+   }
 
   formatDate() {
     this.data.forEach(ms => {

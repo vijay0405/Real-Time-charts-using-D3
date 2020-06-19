@@ -14,7 +14,7 @@ export  class Data {
 })
 export class StatusService {
 
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = 'http://localhost:3022';
   constructor(private httpClient: HttpClient) { }
 
   getInitialStatus() {

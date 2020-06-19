@@ -1,4 +1,14 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {StatusService} from './status.service';
+import {Observable} from 'rxjs';
+
+
+export class Data {
+  open: number;
+  close: number;
+  date: string | Date;
+}
+
 
 @Component({
   selector: 'app-root',
@@ -6,5 +16,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'app';
+  datas: Data[];
+  dataToPlot: Data[];
+
+  set data(status: Data[]) {
+    this.datas = status;
+    this.dataToPlot = this.datas.slice(0, 20);
+  }
+
+  constructor(private statusService: StatusService) {
+
+    this.statusService.getInitialStatus()
+      .subscribe(prices => {
+        this.data = prices;
+      });
+  }
 }
