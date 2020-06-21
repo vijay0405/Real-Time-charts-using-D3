@@ -34,7 +34,7 @@ export class AppComponent {
 
         let dataUpdateObservable =  this.statusService.getUpdates();
         dataUpdateObservable.subscribe((latestStatus: Data) => {
-          this.datas = [latestStatus].concat(this.datas);
+          this.data = [latestStatus].concat(this.datas);
         });
 
 
