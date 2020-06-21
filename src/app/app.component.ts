@@ -29,7 +29,15 @@ export class AppComponent {
 
     this.statusService.getInitialStatus()
       .subscribe(prices => {
-        this.data = prices;
+        console.log(prices);
+        this.datas = prices;
+
+        let dataUpdateObservable =  this.statusService.getUpdates();
+        dataUpdateObservable.subscribe((latestStatus: Data) => {
+          this.datas = [latestStatus].concat(this.datas);
+        });
+
+
       });
   }
 }
