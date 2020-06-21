@@ -30,14 +30,17 @@ export class ChartComponent implements OnChanges {
   constructor() { }
 
   ngOnChanges() {
-    if (this.data) {
+    if (this.data &&  this.chartProps) {
+      this.updateChart();
+    } else if (this.data) {
       this.buildChart();
     }
    }
 
   formatDate() {
+    console.log(this.data)
     this.data.forEach(ms => {
-      if (typeof ms.date === 'string') {
+      if (ms && typeof ms.date === 'string') {
         ms.date = this.parseDate(ms.date);
       }
     });
@@ -129,6 +132,37 @@ export class ChartComponent implements OnChanges {
     this.chartProps.valueline2 = valueline2;
     this.chartProps.xAxis = xAxis;
     this.chartProps.yAxis = yAxis;
+  }
+
+  updateChart() {
+    let _this = this;
+    this.formatDate();
+
+    // Scale the range of the data again
+    this.chartProps.x.domain(d3.extent(this.data, function (d) {
+      console.log(d)
+      if (d && d.date instanceof Date) {
+        return d.date.getTime();
+      }
+    }));
+
+    this.chartProps.y.domain([0, d3.max(this.data, function (d) { return Math.max(d.close, d.open); })]);
+
+    // Select the section we want to apply our changes to
+    this.chartProps.svg.transition();
+
+    // Make the changes to the line chart
+    this.chartProps.svg.select('.line.line1') // update the line
+      .attr('d', this.chartProps.valueline(this.data));
+
+    this.chartProps.svg.select('.line.line2') // update the line
+      .attr('d', this.chartProps.valueline2(this.data));
+
+    this.chartProps.svg.select('.x.axis') // update x axis
+      .call(this.chartProps.xAxis);
+
+    this.chartProps.svg.select('.y.axis') // update y axis
+      .call(this.chartProps.yAxis);
   }
 
 }
